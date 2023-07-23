@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../config/menu/menu_items.dart';
-import '../buttons/buttons_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -49,12 +48,7 @@ class _CustomListTile extends StatelessWidget {
       leading: Icon(menuItem.icon, color: colors.primary),
       trailing: Icon(Icons.arrow_forward_ios_rounded, color: colors.primary),
       onTap: () {
-        /* Navigator.of(context).push(
-          CupertinoPageRoute(
-            builder: (context) => const ButtonsScreen(),
-          ),
-        ); */
-        Navigator.pushNamed(context, menuItem.link);
+        context.push(menuItem.link);
       },
     );
   }
