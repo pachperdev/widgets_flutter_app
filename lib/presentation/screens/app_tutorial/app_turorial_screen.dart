@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,37 +32,77 @@ final slides = <SlideInfo>[
   ),
 ];
 
-class AppTutorialScreen extends StatelessWidget {
+class AppTutorialScreen extends StatefulWidget {
   static const String name = 'tutorial_screen';
   const AppTutorialScreen({super.key});
+
+  @override
+  State<AppTutorialScreen> createState() => _AppTutorialScreenState();
+}
+
+class _AppTutorialScreenState extends State<AppTutorialScreen> {
+  final pageViewController = PageController();
+  bool isLastPage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    pageViewController.addListener(() {
+      final page = pageViewController.page ?? 0;
+      if (!isLastPage && page >= (slides.length - 1.5)) {
+        setState(() {
+          isLastPage = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    pageViewController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          PageView(
-            physics: const BouncingScrollPhysics(),
-            children: slides
-                .map((e) => _Slide(
-                    title: e.title,
-                    description: e.description,
-                    imagePath: e.imagePath))
-                .toList(),
+      body: Stack(children: [
+        PageView(
+          controller: pageViewController,
+          physics: const BouncingScrollPhysics(),
+          children: slides
+              .map((e) => _Slide(
+                  title: e.title,
+                  description: e.description,
+                  imagePath: e.imagePath))
+              .toList(),
+        ),
+        Positioned(
+          right: 20,
+          top: 50,
+          child: TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: const Text('Skip'),
           ),
-          Positioned(
-            right: 20,
-            top: 50,
-            child: TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text('Skip'),
-            ),
-          )
-        ],
-      ),
+        ),
+        isLastPage
+            ? Positioned(
+                bottom: 30,
+                right: 30,
+                child: FadeInRight(
+                  from: 15,
+                  duration: const Duration(seconds: 1),
+                  child: FilledButton(
+                    onPressed: () => context.pop(),
+                    child: const Text('Comenzar'),
+                  ),
+                ),
+              )
+            : const SizedBox(),
+      ]),
     );
   }
 }
