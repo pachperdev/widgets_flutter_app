@@ -16,39 +16,47 @@ class _SideMenuState extends State<SideMenu> {
   int navDrawerIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final hasNoch = MediaQuery.of(context).padding.top > 35;
+    final bool hasNoch = MediaQuery.of(context).padding.top > 35;
 
-    return NavigationDrawer(
-      selectedIndex: navDrawerIndex,
-      onDestinationSelected: (index) {
-        setState(() {
-          navDrawerIndex = index;
-        });
+    return SafeArea(
+      child: Material(
+        shape: Border.all(
+            style: BorderStyle.none), // Esto eliminará los bordes redondeados
+        child: NavigationDrawer(
+          selectedIndex: navDrawerIndex,
+          onDestinationSelected: (index) {
+            setState(() {
+              navDrawerIndex = index;
+            });
 
-        final menuItem = appMenuItems[index];
-        context.push(menuItem.link);
-        widget.scaffoldKey.currentState?.closeDrawer();
-      },
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(28, hasNoch ? 0 : 20, 16, 10),
-          child: const Text('Menu principal'),
+            final MenuItem menuItem = appMenuItems[index];
+            context.push(menuItem.link);
+            widget.scaffoldKey.currentState?.closeDrawer();
+          },
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(28, hasNoch ? 0 : 20, 16, 10),
+              child: const Text('Menu principal'),
+            ),
+            ...appMenuItems
+                .sublist(0, 3)
+                .map((e) => NavigationDrawerDestination(
+                      icon: Icon(e.icon),
+                      label: Text(e.title),
+                    )),
+            const Padding(
+                padding: EdgeInsets.fromLTRB(28, 10, 16, 10), child: Divider()),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
+              child: Text('Mas opciones'),
+            ),
+            ...appMenuItems.sublist(3).map((e) => NavigationDrawerDestination(
+                  icon: Icon(e.icon),
+                  label: Text(e.title),
+                )),
+          ],
         ),
-        ...appMenuItems.sublist(0, 3).map((e) => NavigationDrawerDestination(
-              icon: Icon(e.icon),
-              label: Text(e.title),
-            )),
-        const Padding(
-            padding: EdgeInsets.fromLTRB(28, 10, 16, 10), child: Divider()),
-        const Padding(
-          padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
-          child: Text('Mas opciones'),
-        ),
-        ...appMenuItems.sublist(3).map((e) => NavigationDrawerDestination(
-              icon: Icon(e.icon),
-              label: Text(e.title),
-            )),
-      ],
+      ),
     );
   }
 }
