@@ -18,10 +18,12 @@ class CounterScreen extends ConsumerWidget {
         title: const Text('Counter Screen'),
         actions: [
           IconButton(
+            icon: Icon(
+              isDarkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+            ),
             onPressed: () {
               ref.read(isDarkModeProvider.notifier).state = !isDarkMode;
             },
-            icon: Icon(isDarkMode ? Icons.wb_sunny : Icons.nightlight_round),
           ),
         ],
       ),
