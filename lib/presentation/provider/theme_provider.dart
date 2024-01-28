@@ -4,3 +4,5 @@ import 'package:widgets_flutter_app/config/theme/app_theme.dart';
 final isDarkModeProvider = StateProvider<bool>((ref) => false);
 
 final colorListProvider = Provider((ref) => colorList);
+
+final selectedColorProvider = StateProvider<int>((ref) => 0);
